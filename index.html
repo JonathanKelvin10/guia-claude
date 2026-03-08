@@ -1,0 +1,2492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia Completo 2026 — Ecossistema Claude</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN SYSTEM ─── */
+    :root {
+      --bg:          #0A0E1A;
+      --bg-card:     #111827;
+      --bg-card2:    #1a2236;
+      --primary:     #6366F1;
+      --primary-glow:#818CF8;
+      --green:       #10B981;
+      --green-glow:  #34D399;
+      --orange:      #F59E0B;
+      --orange-glow: #FCD34D;
+      --pink:        #EC4899;
+      --pink-glow:   #F9A8D4;
+      --text:        #F1F5F9;
+      --text-muted:  #94A3B8;
+      --border:      rgba(99,102,241,0.15);
+      --radius:      16px;
+      --radius-lg:   24px;
+      --shadow:      0 4px 24px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 40px rgba(99,102,241,0.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.2;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,14,26,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--pink));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    /* Orbs */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: rgba(99,102,241,0.15);
+      top: -100px; right: -100px;
+    }
+
+    .orb-2 {
+      width: 300px; height: 300px;
+      background: rgba(236,72,153,0.12);
+      bottom: 0; left: -80px;
+    }
+
+    .orb-3 {
+      width: 250px; height: 250px;
+      background: rgba(16,185,129,0.1);
+      bottom: 100px; right: 100px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary-glow);
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .badge .dot {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      line-height: 1.05;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--primary-glow) 0%, var(--pink) 50%, var(--orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--pink));
+      color: white;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99,102,241,0.5);
+    }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(99,102,241,0.4);
+    }
+
+    /* ─── TOOLS OVERVIEW ─── */
+    .tools-strip {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 2rem;
+      margin-top: 1rem;
+    }
+
+    .tool-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .tool-pill:hover {
+      border-color: var(--primary);
+      color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    .tool-pill .icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    /* ─── SECTIONS ─── */
+    section {
+      position: relative;
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ─── PRODUCT CARDS ─── */
+    .product-section {
+      position: relative;
+      padding: 6rem 2rem;
+    }
+
+    .product-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .product-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .product-hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .product-hero-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .product-hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .product-hero-card.claude::before { background: linear-gradient(90deg, var(--primary), var(--pink)); }
+    .product-hero-card.cowork::before { background: linear-gradient(90deg, var(--green), #06B6D4); }
+    .product-hero-card.code::before   { background: linear-gradient(90deg, var(--orange), var(--pink)); }
+
+    .product-icon-wrapper {
+      width: 60px; height: 60px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .claude .product-icon-wrapper  { background: rgba(99,102,241,0.15); }
+    .cowork .product-icon-wrapper  { background: rgba(16,185,129,0.15); }
+    .code .product-icon-wrapper    { background: rgba(245,158,11,0.15); }
+
+    .product-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .claude .product-tag  { background: rgba(99,102,241,0.15); color: var(--primary-glow); }
+    .cowork .product-tag  { background: rgba(16,185,129,0.15); color: var(--green-glow); }
+    .code .product-tag    { background: rgba(245,158,11,0.15); color: var(--orange-glow); }
+
+    .product-hero-card h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .product-hero-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Feature list */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .feature-list .check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .claude .check  { background: rgba(99,102,241,0.2); color: var(--primary-glow); }
+    .cowork .check  { background: rgba(16,185,129,0.2); color: var(--green-glow); }
+    .code .check    { background: rgba(245,158,11,0.2); color: var(--orange-glow); }
+
+    /* ─── EXAMPLES SECTION ─── */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .example-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .example-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(99,102,241,0.35);
+    }
+
+    .example-emoji {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .example-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .example-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── CHAT DEMO ─── */
+    .chat-demo {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .chat-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card2);
+    }
+
+    .chat-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    .chat-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .msg {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .msg.user { flex-direction: row-reverse; }
+
+    .msg-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .msg.user .msg-avatar {
+      background: linear-gradient(135deg, var(--primary), var(--pink));
+    }
+
+    .msg.claude .msg-avatar {
+      background: linear-gradient(135deg, #1E293B, #334155);
+      font-size: 0.7rem;
+    }
+
+    .msg-bubble {
+      max-width: 75%;
+      padding: 0.9rem 1.2rem;
+      border-radius: 16px;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .msg.user .msg-bubble {
+      background: linear-gradient(135deg, var(--primary), #7C3AED);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.claude .msg-bubble {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    /* ─── TERMINAL DEMO ─── */
+    .terminal {
+      background: #0D1117;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 2rem;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .terminal-bar {
+      padding: 0.75rem 1.25rem;
+      background: #161B22;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .t-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .t-dot.red   { background: #FF5F56; }
+    .t-dot.yellow{ background: #FFBD2E; }
+    .t-dot.green { background: #27C93F; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6E7681;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-size: 0.875rem;
+      line-height: 1.8;
+    }
+
+    .t-prompt { color: #27C93F; }
+    .t-cmd    { color: #E6EDF3; }
+    .t-comment{ color: #6E7681; }
+    .t-output { color: #58A6FF; }
+    .t-success{ color: #3FB950; }
+    .t-ai     { color: #D2A8FF; }
+
+    /* ─── COMPARISON TABLE ─── */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2.5rem;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .compare-table th {
+      padding: 1.2rem 1.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .compare-table th:first-child { text-align: left; }
+
+    .compare-table th.h-claude { background: rgba(99,102,241,0.1); color: var(--primary-glow); }
+    .compare-table th.h-cowork { background: rgba(16,185,129,0.1); color: var(--green-glow); }
+    .compare-table th.h-code   { background: rgba(245,158,11,0.1);  color: var(--orange-glow); }
+    .compare-table th.h-feat   { background: var(--bg-card2); color: var(--text-muted); }
+
+    .compare-table td {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+
+    .compare-table td:first-child {
+      text-align: left;
+      color: var(--text);
+      font-weight: 500;
+      background: var(--bg-card);
+    }
+
+    .compare-table tr td.col-claude { background: rgba(99,102,241,0.04); }
+    .compare-table tr td.col-cowork { background: rgba(16,185,129,0.04); }
+    .compare-table tr td.col-code   { background: rgba(245,158,11,0.04); }
+
+    .compare-table .yes { color: var(--green); font-size: 1.1rem; }
+    .compare-table .no  { color: #475569; font-size: 1.1rem; }
+    .compare-table .partial { color: var(--orange); font-size: 0.75rem; font-weight: 600; }
+
+    /* ─── VIDEO SECTION ─── */
+    .video-section {
+      position: relative;
+      padding: 6rem 2rem;
+    }
+
+    .video-wrap {
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+
+    .video-container {
+      position: relative;
+      background: var(--bg-card);
+      border: 2px dashed rgba(99,102,241,0.35);
+      border-radius: var(--radius-lg);
+      aspect-ratio: 16/9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .video-container:hover { border-color: rgba(99,102,241,0.6); }
+
+    .video-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.06) 0%, transparent 70%);
+    }
+
+    .video-placeholder-icon {
+      width: 80px; height: 80px;
+      background: rgba(99,102,241,0.15);
+      border: 2px solid rgba(99,102,241,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .video-placeholder-text {
+      text-align: center;
+    }
+
+    .video-placeholder-text h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .video-placeholder-text p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .video-soon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-glow);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── STEP-BY-STEP ─── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .step:hover { border-color: rgba(99,102,241,0.3); }
+
+    .step-num {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .step-num.purple { background: rgba(99,102,241,0.2); color: var(--primary-glow); }
+    .step-num.green  { background: rgba(16,185,129,0.2); color: var(--green-glow); }
+    .step-num.orange { background: rgba(245,158,11,0.2); color: var(--orange-glow); }
+
+    .step-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .step-content p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── HIGHLIGHT BOX ─── */
+    .highlight-box {
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border-left: 3px solid;
+    }
+
+    .highlight-box.info {
+      background: rgba(99,102,241,0.08);
+      border-color: var(--primary);
+    }
+
+    .highlight-box.success {
+      background: rgba(16,185,129,0.08);
+      border-color: var(--green);
+    }
+
+    .highlight-box.warning {
+      background: rgba(245,158,11,0.08);
+      border-color: var(--orange);
+    }
+
+    .highlight-box strong {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .highlight-box p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── WHO IS IT FOR ─── */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .audience-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+    }
+
+    .audience-card:hover {
+      border-color: rgba(99,102,241,0.3);
+      transform: translateY(-3px);
+    }
+
+    .audience-emoji { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+
+    .audience-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .audience-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── DIVIDER ─── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 2rem;
+    }
+
+    /* ─── GRADIENT BG SECTIONS ─── */
+    .bg-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-section.purple-tint::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .bg-section.green-tint::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .bg-section.orange-tint::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem 4rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    footer .footer-logo {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    footer a {
+      color: var(--primary-glow);
+      text-decoration: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .product-grid { grid-template-columns: 1fr; }
+      .examples-grid { grid-template-columns: 1fr 1fr; }
+      .audience-grid { grid-template-columns: 1fr; }
+      .compare-table { font-size: 0.8rem; }
+      .compare-table td, .compare-table th { padding: 0.75rem; }
+    }
+
+    @media (max-width: 560px) {
+      .examples-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── FLOW DIAGRAM ─── */
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+
+    .flow-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 120px;
+    }
+
+    .flow-circle {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      position: relative;
+    }
+
+    .flow-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      padding: 0 0.5rem;
+      margin-top: -30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">🤖</div>
+      Guia Completo 2026
+    </a>
+    <ul class="nav-links">
+      <li><a href="#claude">Claude</a></li>
+      <li><a href="#cowork">Cowork</a></li>
+      <li><a href="#claudecode">Claude Code</a></li>
+      <li><a href="#comparar">Comparar</a></li>
+      <li><a href="#video">Vídeo</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="badge">
+      <span class="dot"></span>
+      Guia Completo · 2026
+    </div>
+
+    <h1>
+      Entenda o<br />
+      <span class="gradient">Ecossistema Claude</span><br />
+      de uma vez por todas
+    </h1>
+
+    <p>
+      Do chat simples ao código no terminal — descubra qual ferramenta da Anthropic
+      é perfeita para o que você precisa fazer, com exemplos reais e linguagem simples.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#claude" class="btn btn-primary">🚀 Começar a Explorar</a>
+      <a href="#comparar" class="btn btn-ghost">📊 Ver Comparativo</a>
+    </div>
+
+    <div class="tools-strip">
+      <a href="#claude" class="tool-pill">
+        <span class="icon" style="background:rgba(99,102,241,0.15)">💬</span>
+        Claude Chat
+      </a>
+      <a href="#cowork" class="tool-pill">
+        <span class="icon" style="background:rgba(16,185,129,0.15)">🖥️</span>
+        Cowork
+      </a>
+      <a href="#claudecode" class="tool-pill">
+        <span class="icon" style="background:rgba(245,158,11,0.15)">⌨️</span>
+        Claude Code
+      </a>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ MAPA MENTAL v2 ═══ -->
+  <section id="intro" style="padding: 5rem 1rem 5rem; max-width:100%; overflow:hidden;">
+
+    <div class="section-header fade-in" style="margin-bottom:2.5rem;">
+      <span class="section-label" style="color: var(--primary-glow)">🗺️ Mapa Mental</span>
+      <h2 class="section-title">Entenda o Ecossistema<br />de uma só olhada</h2>
+      <p class="section-desc">
+        Explore as 3 ferramentas — passe o mouse para destacar, clique para saber mais.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════
+         MIND MAP CANVAS (v2 — UI-UX-PRO-MAX)
+         Glassmorphism + OLED dark + SVG glow filters
+         + Gradient trunk lines + Stagger entrance
+         + Tooltips on hover + Mobile fallback
+    ════════════════════════════════════ -->
+
+    <!-- DESKTOP CANVAS (hidden on mobile via CSS) -->
+    <div class="mm-outer fade-in" id="mmOuter">
+
+      <!-- Ambient blobs behind canvas -->
+      <div class="mm-blob mm-blob-purple"></div>
+      <div class="mm-blob mm-blob-green"></div>
+      <div class="mm-blob mm-blob-orange"></div>
+
+      <!-- SVG layer (lines drawn by JS) -->
+      <svg class="mm-svg" id="mmSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <!-- Floating tooltip -->
+      <div class="mm-tooltip" id="mmTooltip" aria-hidden="true"></div>
+
+      <!-- ── Category labels (positioned by JS) ── -->
+      <div class="mm-cat" id="cat-chat"  style="color:#a5b4fc">PARA TODOS</div>
+      <div class="mm-cat" id="cat-cowork" style="color:#6ee7b7">PARA PROFISSIONAIS</div>
+      <div class="mm-cat" id="cat-code"  style="color:#fcd34d">PARA DEVS</div>
+
+      <!-- ── CENTER NODE ── -->
+      <div class="mm-center" id="mm-center" style="--delay:0s">
+        <div class="mm-center-glow-ring mm-ring-1"></div>
+        <div class="mm-center-glow-ring mm-ring-2"></div>
+        <span class="mm-center-icon">🤖</span>
+        <span class="mm-center-title">Ecossistema</span>
+        <span class="mm-center-sub"><strong>Claude</strong></span>
+      </div>
+
+      <!-- ══ CLAUDE CHAT — BRANCH LEFT ══ -->
+      <div class="mm-main mm-main-chat" id="mm-chat" style="--delay:0.18s"
+           onclick="location.href='#claude'" title="Ver Claude Chat em detalhe">
+        <span class="mm-main-icon">💬</span>
+        <div>
+          <div class="mm-main-name">Claude Chat</div>
+          <div class="mm-main-sub">Web · App · Gratuito</div>
+        </div>
+        <span class="mm-main-arrow">›</span>
+      </div>
+
+      <div class="mm-leaf mm-lf-chat" id="lc1" style="--delay:0.30s"
+           data-branch="chat" data-tip="Acesse em claude.ai — sem instalar nada">
+        🌐 Pelo navegador
+      </div>
+      <div class="mm-leaf mm-lf-chat" id="lc2" style="--delay:0.36s"
+           data-branch="chat" data-tip="Funciona para qualquer pessoa, do estudante ao CEO">
+        👤 Qualquer pessoa
+      </div>
+      <div class="mm-leaf mm-lf-chat" id="lc3" style="--delay:0.42s"
+           data-branch="chat" data-tip="E-mails, relatórios, artigos, posts e muito mais">
+        ✍️ Escreve textos
+      </div>
+      <div class="mm-leaf mm-lf-chat" id="lc4" style="--delay:0.48s"
+           data-branch="chat" data-tip="Envie PDFs para análise e resumo instantâneo">
+        📄 Analisa documentos
+      </div>
+      <div class="mm-leaf mm-lf-chat" id="lc5" style="--delay:0.54s"
+           data-branch="chat" data-tip="Basta uma conta gratuita no claude.ai">
+        🔌 Sem instalação
+      </div>
+
+      <!-- ══ COWORK — BRANCH TOP-RIGHT ══ -->
+      <div class="mm-main mm-main-cowork" id="mm-cowork" style="--delay:0.65s"
+           onclick="location.href='#cowork'" title="Ver Cowork em detalhe">
+        <span class="mm-main-icon">🖥️</span>
+        <div>
+          <div class="mm-main-name">Cowork</div>
+          <div class="mm-main-sub">App Desktop</div>
+        </div>
+        <span class="mm-main-arrow">›</span>
+      </div>
+
+      <div class="mm-leaf mm-lf-cowork" id="lw1" style="--delay:0.74s"
+           data-branch="cowork" data-tip="Lê e organiza pastas do seu computador">
+        📁 Acessa arquivos
+      </div>
+      <div class="mm-leaf mm-lf-cowork" id="lw2" style="--delay:0.80s"
+           data-branch="cowork" data-tip="Gera Word, Excel, PowerPoint e PDF reais">
+        📊 Cria Word, Excel, PPT
+      </div>
+      <div class="mm-leaf mm-lf-cowork" id="lw3" style="--delay:0.86s"
+           data-branch="cowork" data-tip="Pesquisa e navega em sites de forma autônoma">
+        🔍 Navega na internet
+      </div>
+      <div class="mm-leaf mm-lf-cowork" id="lw4" style="--delay:0.92s"
+           data-branch="cowork" data-tip="Integra com Slack, Gmail, Asana e outros">
+        🔗 Conecta com apps
+      </div>
+      <div class="mm-leaf mm-lf-cowork" id="lw5" style="--delay:0.98s"
+           data-branch="cowork" data-tip="Agenda tarefas para rodar automaticamente">
+        ⏰ Tarefas automáticas
+      </div>
+
+      <!-- ══ CLAUDE CODE — BRANCH BOTTOM-RIGHT ══ -->
+      <div class="mm-main mm-main-code" id="mm-code" style="--delay:1.08s"
+           onclick="location.href='#claudecode'" title="Ver Claude Code em detalhe">
+        <span class="mm-main-icon">⌨️</span>
+        <div>
+          <div class="mm-main-name">Claude Code</div>
+          <div class="mm-main-sub">Terminal · CLI</div>
+        </div>
+        <span class="mm-main-arrow">›</span>
+      </div>
+
+      <div class="mm-leaf mm-lf-code" id="lk1" style="--delay:1.17s"
+           data-branch="code" data-tip="Encontra e resolve erros no seu código">
+        🐛 Corrige bugs
+      </div>
+      <div class="mm-leaf mm-lf-code" id="lk2" style="--delay:1.22s"
+           data-branch="code" data-tip="Implementa funcionalidades inteiras no projeto">
+        🏗️ Constrói features
+      </div>
+      <div class="mm-leaf mm-lf-code" id="lk3" style="--delay:1.27s"
+           data-branch="code" data-tip="Cria e executa testes automatizados">
+        🧪 Roda testes
+      </div>
+      <div class="mm-leaf mm-lf-code" id="lk4" style="--delay:1.32s"
+           data-branch="code" data-tip="Adiciona comentários e documentação ao código">
+        📖 Documenta código
+      </div>
+      <div class="mm-leaf mm-lf-code" id="lk5" style="--delay:1.37s"
+           data-branch="code" data-tip="Cria commits e gerencia repositório Git">
+        🔀 Commits no Git
+      </div>
+
+    </div><!-- /mm-outer -->
+
+    <!-- MOBILE CARDS (shown only < 760px) -->
+    <div class="mm-mobile">
+      <a href="#claude" class="mm-mob-card mm-mob-chat">
+        <span class="mm-mob-icon">💬</span>
+        <div>
+          <strong>Claude Chat</strong>
+          <span>Para todos · Navegador · Gratuito</span>
+        </div>
+        <span class="mm-mob-arr">›</span>
+      </a>
+      <a href="#cowork" class="mm-mob-card mm-mob-cowork">
+        <span class="mm-mob-icon">🖥️</span>
+        <div>
+          <strong>Cowork</strong>
+          <span>Para profissionais · Cria arquivos reais</span>
+        </div>
+        <span class="mm-mob-arr">›</span>
+      </a>
+      <a href="#claudecode" class="mm-mob-card mm-mob-code">
+        <span class="mm-mob-icon">⌨️</span>
+        <div>
+          <strong>Claude Code</strong>
+          <span>Para devs · Terminal · Corrige código</span>
+        </div>
+        <span class="mm-mob-arr">›</span>
+      </a>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="mm-legend fade-in">
+      <a href="#claude" class="mm-leg-item">
+        <span class="mm-leg-dot" style="background:var(--primary); box-shadow:0 0 8px var(--primary)"></span>
+        <div><strong style="color:var(--primary-glow)">Claude Chat</strong><span> — Para todos · Gratuito</span></div>
+      </a>
+      <a href="#cowork" class="mm-leg-item">
+        <span class="mm-leg-dot" style="background:var(--green); box-shadow:0 0 8px var(--green)"></span>
+        <div><strong style="color:var(--green-glow)">Cowork</strong><span> — Para profissionais · Desktop</span></div>
+      </a>
+      <a href="#claudecode" class="mm-leg-item">
+        <span class="mm-leg-dot" style="background:var(--orange); box-shadow:0 0 8px var(--orange)"></span>
+        <div><strong style="color:var(--orange-glow)">Claude Code</strong><span> — Para devs · Terminal</span></div>
+      </a>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════ MINDMAP v2 STYLES ══════════════════ -->
+  <style>
+
+    /* ── Canvas wrapper ──
+       aspect-ratio: 11/7 keeps both axes in sync when width changes,
+       so scaleX == scaleY and node positions never diverge.
+       min-width ensures we never render at a size where nodes collide.
+    ── */
+    .mm-outer {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      aspect-ratio: 11 / 7;        /* locks height = width × (7/11) */
+      min-width: 0;
+      margin: 0 auto;
+      border-radius: 24px;
+      background: rgba(6, 9, 20, 0.7);
+      border: 1px solid rgba(99,102,241,0.1);
+      overflow: hidden;
+    }
+
+    /* Ambient blobs for depth (glassmorphism bg recommendation) */
+    .mm-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .mm-blob-purple { width:320px; height:320px; background:rgba(99,102,241,0.09); top:-60px; left:30%; }
+    .mm-blob-green  { width:260px; height:260px; background:rgba(16,185,129,0.08); top:30px;  right:-40px; }
+    .mm-blob-orange { width:240px; height:240px; background:rgba(245,158,11,0.07); bottom:20px; right:5%; }
+
+    /* SVG layer */
+    .mm-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Tooltip ── */
+    .mm-tooltip {
+      position: absolute;
+      background: rgba(10,14,26,0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      font-size: 0.78rem;
+      padding: 7px 14px;
+      border-radius: 10px;
+      pointer-events: none;
+      z-index: 50;
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.18s, transform 0.18s;
+      max-width: 260px;
+      white-space: normal;
+    }
+    .mm-tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Category labels ── */
+    .mm-cat {
+      position: absolute;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      z-index: 10;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ── ENTRANCE ANIMATION ── */
+    @keyframes mmPop {
+      from { opacity: 0; transform: translate(-50%,-50%) scale(0.55); }
+      to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    }
+
+    .mm-enter {
+      animation: mmPop 0.38s cubic-bezier(0.34,1.56,0.64,1) both;
+      animation-delay: var(--delay, 0s);
+    }
+
+    /* ── CENTER NODE — glassmorphism circle ── */
+    .mm-center {
+      position: absolute;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: rgba(15, 20, 42, 0.85);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 2px solid rgba(99,102,241,0.45);
+      box-shadow:
+        0 0 0 10px rgba(99,102,241,0.06),
+        0 0 50px rgba(99,102,241,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 2px;
+      z-index: 15;
+      cursor: default;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .mm-center:hover {
+      box-shadow:
+        0 0 0 14px rgba(99,102,241,0.09),
+        0 0 70px rgba(99,102,241,0.28);
+      transform: translate(-50%,-50%) scale(1.04) !important;
+    }
+
+    /* Static concentric rings (no spinning — UX anti-pattern for decorative) */
+    .mm-center-glow-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(99,102,241,0.18);
+      pointer-events: none;
+    }
+    .mm-ring-1 { inset: -14px; }
+    .mm-ring-2 { inset: -26px; opacity: 0.5; }
+
+    .mm-center-icon  { font-size: 2rem; line-height: 1; }
+    .mm-center-title { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+    .mm-center-sub   { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 0.82rem; color: var(--text); }
+
+    /* ── MAIN BRANCH NODES — glassmorphism pills ── */
+    .mm-main {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 18px 13px 15px;
+      border-radius: 60px;
+      cursor: pointer;
+      z-index: 15;
+      white-space: nowrap;
+      user-select: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 0.22s, opacity 0.3s;
+    }
+
+    .mm-main:hover { transform: translate(-50%,-50%) scale(1.07) !important; }
+
+    .mm-main-chat {
+      background: rgba(99,102,241,0.1);
+      border: 1.5px solid rgba(99,102,241,0.38);
+      color: #c7d2fe;
+      box-shadow: 0 6px 24px rgba(99,102,241,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+    .mm-main-chat:hover {
+      box-shadow: 0 8px 36px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .mm-main-cowork {
+      background: rgba(16,185,129,0.1);
+      border: 1.5px solid rgba(16,185,129,0.38);
+      color: #a7f3d0;
+      box-shadow: 0 6px 24px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+    .mm-main-cowork:hover {
+      box-shadow: 0 8px 36px rgba(16,185,129,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .mm-main-code {
+      background: rgba(245,158,11,0.1);
+      border: 1.5px solid rgba(245,158,11,0.38);
+      color: #fde68a;
+      box-shadow: 0 6px 24px rgba(245,158,11,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+    .mm-main-code:hover {
+      box-shadow: 0 8px 36px rgba(245,158,11,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .mm-main-icon { font-size: 1.4rem; }
+    .mm-main-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.9rem; }
+    .mm-main-sub  { font-size: 0.68rem; opacity: 0.65; margin-top: 1px; }
+    .mm-main-arrow {
+      font-size: 1.2rem;
+      opacity: 0;
+      margin-left: 2px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .mm-main:hover .mm-main-arrow { opacity: 0.7; transform: translateX(3px); }
+
+    /* ── LEAF NODES — glass tags ── */
+    .mm-leaf {
+      position: absolute;
+      padding: 7px 14px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      z-index: 15;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+                  border-color 0.2s, box-shadow 0.2s, opacity 0.3s;
+    }
+
+    .mm-leaf:hover { transform: translate(-50%,-50%) scale(1.1) !important; }
+
+    .mm-lf-chat {
+      background: rgba(99,102,241,0.07);
+      border: 1px solid rgba(99,102,241,0.22);
+      color: #a5b4fc;
+    }
+    .mm-lf-chat:hover {
+      border-color: rgba(99,102,241,0.55);
+      box-shadow: 0 0 14px rgba(99,102,241,0.2);
+    }
+
+    .mm-lf-cowork {
+      background: rgba(16,185,129,0.07);
+      border: 1px solid rgba(16,185,129,0.22);
+      color: #6ee7b7;
+    }
+    .mm-lf-cowork:hover {
+      border-color: rgba(16,185,129,0.55);
+      box-shadow: 0 0 14px rgba(16,185,129,0.2);
+    }
+
+    .mm-lf-code {
+      background: rgba(245,158,11,0.07);
+      border: 1px solid rgba(245,158,11,0.22);
+      color: #fcd34d;
+    }
+    .mm-lf-code:hover {
+      border-color: rgba(245,158,11,0.55);
+      box-shadow: 0 0 14px rgba(245,158,11,0.2);
+    }
+
+    /* ── DIM-on-focus effect ── */
+    .mm-outer.hov-chat   .mm-main-cowork,
+    .mm-outer.hov-chat   .mm-main-code,
+    .mm-outer.hov-chat   .mm-lf-cowork,
+    .mm-outer.hov-chat   .mm-lf-code,
+    .mm-outer.hov-chat   .mm-cat[id="cat-cowork"],
+    .mm-outer.hov-chat   .mm-cat[id="cat-code"]   { opacity: 0.18 !important; }
+
+    .mm-outer.hov-cowork .mm-main-chat,
+    .mm-outer.hov-cowork .mm-main-code,
+    .mm-outer.hov-cowork .mm-lf-chat,
+    .mm-outer.hov-cowork .mm-lf-code,
+    .mm-outer.hov-cowork .mm-cat[id="cat-chat"],
+    .mm-outer.hov-cowork .mm-cat[id="cat-code"]   { opacity: 0.18 !important; }
+
+    .mm-outer.hov-code   .mm-main-chat,
+    .mm-outer.hov-code   .mm-main-cowork,
+    .mm-outer.hov-code   .mm-lf-chat,
+    .mm-outer.hov-code   .mm-lf-cowork,
+    .mm-outer.hov-code   .mm-cat[id="cat-chat"],
+    .mm-outer.hov-code   .mm-cat[id="cat-cowork"] { opacity: 0.18 !important; }
+
+    /* ── LEGEND ── */
+    .mm-legend {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.8rem;
+    }
+
+    .mm-leg-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .mm-leg-item:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-2px); }
+
+    .mm-leg-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .mm-leg-item strong { font-weight: 700; }
+    .mm-leg-item span   { color: var(--text-muted); }
+
+    /* ── MOBILE CARDS ── */
+    .mm-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .mm-mob-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 1.1rem 1.4rem;
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .mm-mob-card:hover { transform: translateX(4px); }
+    .mm-mob-card > div { flex: 1; }
+    .mm-mob-card strong { display: block; font-family:'Poppins',sans-serif; font-weight:700; }
+    .mm-mob-card span   { font-size: 0.8rem; color: var(--text-muted); }
+
+    .mm-mob-chat   { border-left: 3px solid var(--primary); }
+    .mm-mob-cowork { border-left: 3px solid var(--green); }
+    .mm-mob-code   { border-left: 3px solid var(--orange); }
+
+    .mm-mob-icon { font-size: 1.8rem; }
+    .mm-mob-arr  { font-size: 1.4rem; color: var(--text-muted); }
+
+    /* ── Responsive breakpoint ──
+       UI-UX-PRO-MAX: test at 320,375,414,768,1024,1440.
+       Canvas needs ≥960px to maintain minimum 8px gap between nodes.
+       Below that, show the mobile card fallback.
+    ── */
+    @media (max-width: 959px) {
+      .mm-outer   { display: none; }
+      .mm-mobile  { display: flex; }
+      .mm-legend  { gap: 1rem; }
+      .mm-leg-item { font-size: 0.75rem; padding: 8px 14px; }
+    }
+  </style>
+
+  <!-- ══════════════════ MINDMAP v2 SCRIPT ══════════════════ -->
+  <script>
+  (function () {
+    /* ── LAYOUT (virtual canvas 1100 × 700) ────────────────
+       All positions = center of each element in virtual px.
+       JS scales them to actual container dimensions.
+    ──────────────────────────────────────────────────────── */
+    const VW = 1100, VH = 700;
+    /* With aspect-ratio: 11/7, actual height = AW × (7/11).
+       So scaleX === scaleY === AW/VW — use a single uniform scale. */
+
+    /* ── LAYOUT v3 — collision-safe (UI-UX-PRO-MAX: min 8px gap rule)
+       Key fixes vs v2:
+       • mm-chat moved RIGHT  196 → 285  (wider gap to leaves)
+       • lc leaves moved LEFT  96 → 72   (away from center)
+       • lc3 y changed 352 → 338         (was SAME as mm-chat y=352 → overlap!)
+       • lw3 y changed 182 → 171         (was SAME as mm-cowork y=182 → overlap!)
+       • lk3 y changed 528 → 516         (was SAME as mm-code  y=528 → overlap!)
+       • mm-cowork/code moved LEFT 808→775 (more room for right leaves)
+       • right leaves moved RIGHT 992→1025 (clear of main nodes at all scales)
+    ─────────────────────────────────────────────────────────────── */
+    const layout = {
+      // Center
+      'mm-center':  { x: 550, y: 352 },
+
+      // Main branch nodes
+      'mm-chat':    { x: 285, y: 352 },   // ← was 196, moved right
+      'mm-cowork':  { x: 775, y: 182 },   // ← was 808, moved left
+      'mm-code':    { x: 775, y: 528 },   // ← was 808, moved left
+
+      // Claude Chat leaves — x=72, y spread 148–538, lc3 ≠ 352
+      'lc1': { x: 72, y: 148 },
+      'lc2': { x: 72, y: 243 },
+      'lc3': { x: 72, y: 338 },  // ← was 352 (same y as mm-chat!) → fixed
+      'lc4': { x: 72, y: 433 },
+      'lc5': { x: 72, y: 528 },
+
+      // Cowork leaves — x=1025, lw3 ≠ 182
+      'lw1': { x: 1025, y: 52  },
+      'lw2': { x: 1025, y: 116 },
+      'lw3': { x: 1025, y: 171 },  // ← was 182 (same y as mm-cowork!) → fixed
+      'lw4': { x: 1025, y: 244 },
+      'lw5': { x: 1025, y: 304 },
+
+      // Claude Code leaves — x=1025, lk3 ≠ 528
+      'lk1': { x: 1025, y: 400 },
+      'lk2': { x: 1025, y: 460 },
+      'lk3': { x: 1025, y: 516 },  // ← was 528 (same y as mm-code!) → fixed
+      'lk4': { x: 1025, y: 582 },
+      'lk5': { x: 1025, y: 642 },
+    };
+
+    // Category label positions (above each cluster)
+    const catLayout = {
+      'cat-chat':   { x: 72,   y: 98  },
+      'cat-cowork': { x: 1025, y: 18  },
+      'cat-code':   { x: 1025, y: 368 },
+    };
+
+    const colors = {
+      chat:   '#6366F1',
+      cowork: '#10B981',
+      code:   '#F59E0B',
+    };
+
+    const leafBranch = {
+      lc1:'chat',   lc2:'chat',   lc3:'chat',   lc4:'chat',   lc5:'chat',
+      lw1:'cowork', lw2:'cowork', lw3:'cowork', lw4:'cowork', lw5:'cowork',
+      lk1:'code',   lk2:'code',   lk3:'code',   lk4:'code',   lk5:'code',
+    };
+
+    /* ── helpers ───────────────────────────────────────── */
+    function ns(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+    /* ── MAIN INIT ─────────────────────────────────────── */
+    function init() {
+      const outer = document.getElementById('mmOuter');
+      if (!outer || outer.offsetWidth === 0) return;
+
+      const AW = outer.offsetWidth;
+      const AH = outer.offsetHeight;
+      /* Uniform scale — aspect-ratio:11/7 guarantees AH = AW×(7/11),
+         so sx === sy. Using a single scale avoids any stretch distortion. */
+      const sx = AW / VW;
+      const sy = sx;  // intentional: uniform scale keeps proportions correct
+
+      /* 1. Position HTML nodes */
+      for (const [id, pos] of Object.entries(layout)) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        el.style.left = (pos.x * sx) + 'px';
+        el.style.top  = (pos.y * sy) + 'px';
+        el.style.transform = 'translate(-50%, -50%)';
+        // Kick off entrance animation
+        el.classList.add('mm-enter');
+      }
+
+      /* Position category labels */
+      for (const [id, pos] of Object.entries(catLayout)) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        el.style.left = (pos.x * sx) + 'px';
+        el.style.top  = (pos.y * sy) + 'px';
+        el.style.transform = 'translateX(-50%)';
+      }
+
+      /* 2. Build SVG */
+      const svg = document.getElementById('mmSvg');
+      svg.innerHTML = '';
+      svg.setAttribute('viewBox', `0 0 ${AW} ${AH}`);
+
+      /* SVG <defs>: glow filters + linear gradients */
+      const defs = ns('defs');
+
+      // Glow filters per branch
+      ['chat','cowork','code'].forEach(b => {
+        const f = ns('filter');
+        f.setAttribute('id', `glow-${b}`);
+        f.setAttribute('x', '-40%'); f.setAttribute('y', '-40%');
+        f.setAttribute('width', '180%'); f.setAttribute('height', '180%');
+        const blur = ns('feGaussianBlur');
+        blur.setAttribute('stdDeviation', '4');
+        blur.setAttribute('result', 'blur');
+        const merge = ns('feMerge');
+        const n1 = ns('feMergeNode'); n1.setAttribute('in', 'blur');
+        const n2 = ns('feMergeNode'); n2.setAttribute('in', 'SourceGraphic');
+        merge.appendChild(n1); merge.appendChild(n2);
+        f.appendChild(blur); f.appendChild(merge);
+        defs.appendChild(f);
+      });
+
+      /* ── Arrowhead markers (one per branch color) ── */
+      ['chat','cowork','code'].forEach(b => {
+        const marker = ns('marker');
+        marker.setAttribute('id', `arrow-${b}`);
+        marker.setAttribute('markerWidth', '8');
+        marker.setAttribute('markerHeight', '8');
+        marker.setAttribute('refX', '6');
+        marker.setAttribute('refY', '3');
+        marker.setAttribute('orient', 'auto');
+        const poly = ns('polygon');
+        poly.setAttribute('points', '0 0, 8 3, 0 6');
+        poly.setAttribute('fill', colors[b]);
+        poly.setAttribute('opacity', '0.75');
+        marker.appendChild(poly);
+        defs.appendChild(marker);
+      });
+
+      svg.appendChild(defs);
+
+      /* Helper: get actual px center of a positioned node */
+      function center(el) {
+        return {
+          x: parseFloat(el.style.left),
+          y: parseFloat(el.style.top),
+        };
+      }
+
+      /* ── drawPath ────────────────────────────────────────────
+         FIX 1: append to SVG FIRST, then call getTotalLength()
+                so the browser computes the real path length.
+         FIX 2: use setTimeout (not rAF) for reliable CSS
+                transition trigger after DOM paint.
+         FIX 3: for horizontal chat line (same y) use slightly
+                curved control points to avoid degenerate bezier.
+      ──────────────────────────────────────────────────────── */
+      function drawPath(x1, y1, x2, y2, color, isDash, width, filterId, delay, marker) {
+        /* Build bezier — if Δy < 8px (nearly horizontal), arc the
+           control points slightly so the path is never degenerate */
+        const dx = x2 - x1, dy = y2 - y1;
+        const mx = (x1 + x2) / 2;
+        let d;
+        if (Math.abs(dy) < 8) {
+          /* S-curve: CP1 dips up, CP2 dips down */
+          const arc = Math.abs(dx) * 0.18;
+          d = `M ${x1} ${y1} C ${x1 + dx*0.35} ${y1 - arc}, ${x1 + dx*0.65} ${y1 + arc}, ${x2} ${y2}`;
+        } else {
+          d = `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+        }
+
+        const path = ns('path');
+        path.setAttribute('d', d);
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', width);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('opacity', isDash ? '0.38' : '0.72');
+        if (filterId) path.setAttribute('filter', `url(#${filterId})`);
+        if (marker)   path.setAttribute('marker-end', `url(#arrow-${marker})`);
+
+        /* FIX 1 — append BEFORE getTotalLength() */
+        svg.appendChild(path);
+
+        if (!isDash) {
+          /* Trunk line: animate draw-in */
+          const len = path.getTotalLength();
+          path.setAttribute('stroke-dasharray', len);
+          path.setAttribute('stroke-dashoffset', len);
+          /* FIX 2 — setTimeout is more reliable than double-rAF */
+          setTimeout(() => {
+            path.style.transition = `stroke-dashoffset 0.72s cubic-bezier(0.4,0,0.2,1) ${delay}ms`;
+            path.setAttribute('stroke-dashoffset', '0');
+          }, 30);
+        } else {
+          /* Leaf line: simple dashed, no draw animation */
+          path.setAttribute('stroke-dasharray', '6 5');
+          path.style.opacity = '0';
+          setTimeout(() => {
+            path.style.transition = `opacity 0.4s ease ${delay}ms`;
+            path.style.opacity = isDash ? '0.38' : '0.72';
+          }, 30);
+        }
+        return path;
+      }
+
+      const chatEl   = document.getElementById('mm-chat');
+      const coworkEl = document.getElementById('mm-cowork');
+      const codeEl   = document.getElementById('mm-code');
+      const centEl   = document.getElementById('mm-center');
+      if (!chatEl || !coworkEl || !codeEl || !centEl) return;
+
+      const cc = center(centEl);
+      const cp = center(chatEl);
+      const wp = center(coworkEl);
+      const kp = center(codeEl);
+
+      /* Trunk lines: center → main branches
+         Note: chat line is ~horizontal (same y), handled by S-curve fix above */
+      drawPath(cc.x, cc.y, cp.x, cp.y, colors.chat,   false, 2.5, 'glow-chat',   220, 'chat');
+      drawPath(cc.x, cc.y, wp.x, wp.y, colors.cowork, false, 2.5, 'glow-cowork', 380, 'cowork');
+      drawPath(cc.x, cc.y, kp.x, kp.y, colors.code,   false, 2.5, 'glow-code',   520, 'code');
+
+      /* Branch → leaf lines (dashed, fade-in) */
+      const mainCenters = { chat: cp, cowork: wp, code: kp };
+      let leafDelay = 650;
+      for (const [id, branch] of Object.entries(leafBranch)) {
+        const leaf = document.getElementById(id);
+        if (!leaf) continue;
+        const lc = center(leaf);
+        const mc = mainCenters[branch];
+        drawPath(mc.x, mc.y, lc.x, lc.y, colors[branch], true, 1.3, null, leafDelay, null);
+        leafDelay += 28;
+      }
+
+      /* 3. Hover: dim other branches */
+      function addFocus(el, cls) {
+        el.addEventListener('mouseenter', () => outer.classList.add(cls));
+        el.addEventListener('mouseleave', () => outer.classList.remove(cls));
+      }
+      addFocus(chatEl,   'hov-chat');
+      addFocus(coworkEl, 'hov-cowork');
+      addFocus(codeEl,   'hov-code');
+      outer.querySelectorAll('.mm-leaf').forEach(leaf => {
+        const b = leaf.dataset.branch;
+        if (!b) return;
+        addFocus(leaf, 'hov-' + b);
+      });
+
+      /* 4. Tooltip on leaf hover (mouse-enter = primary, per UX guidelines) */
+      const tip = document.getElementById('mmTooltip');
+      outer.querySelectorAll('.mm-leaf[data-tip]').forEach(leaf => {
+        leaf.addEventListener('mouseenter', (e) => {
+          if (!tip) return;
+          tip.textContent = leaf.dataset.tip;
+          tip.classList.add('visible');
+          // Position tooltip near the leaf
+          const lx = parseFloat(leaf.style.left);
+          const ly = parseFloat(leaf.style.top);
+          const branch = leaf.dataset.branch;
+          // Place above the leaf
+          const tipX = Math.max(10, Math.min(lx - 80, AW - 220));
+          const tipY = Math.max(4, ly - 48);
+          tip.style.left = tipX + 'px';
+          tip.style.top  = tipY + 'px';
+          // Color border per branch
+          tip.style.borderColor = 'rgba(' +
+            (branch === 'chat' ? '99,102,241' : branch === 'cowork' ? '16,185,129' : '245,158,11')
+            + ',0.4)';
+        });
+        leaf.addEventListener('mouseleave', () => {
+          if (tip) tip.classList.remove('visible');
+        });
+      });
+    }
+
+    /* ── Boot ── */
+    function boot() { setTimeout(init, 90); }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+    let rt;
+    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(init, 160); });
+  })();
+  </script>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ CLAUDE CHAT ═══ -->
+  <div class="bg-section purple-tint" id="claude">
+    <section>
+      <div class="section-header fade-in">
+        <span class="section-label" style="color: var(--primary-glow)">🔮 Ferramenta 1 de 3</span>
+        <h2 class="section-title">Claude — O Chat com IA</h2>
+        <p class="section-desc">
+          A forma mais simples e acessível de usar a inteligência artificial da Anthropic.
+          Basta digitar e conversar.
+        </p>
+      </div>
+
+      <div class="product-grid fade-in">
+        <div class="product-hero-card claude" style="grid-column: 1 / -1;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap: 3rem; align-items:start; flex-wrap:wrap;">
+            <div>
+              <div class="product-tag">💬 Claude Chat</div>
+              <div class="product-icon-wrapper">💬</div>
+              <h3>O que é o Claude?</h3>
+              <p>
+                O Claude é um assistente de IA que você acessa pelo navegador (<a href="https://claude.ai" style="color:var(--primary-glow)">claude.ai</a>),
+                pelo celular ou pelo computador. Você conversa em texto — como num chat — e o Claude responde,
+                cria, explica, resume ou ajuda com qualquer tarefa intelectual.
+              </p>
+              <ul class="feature-list">
+                <li><span class="check">✓</span> Responde perguntas em qualquer assunto</li>
+                <li><span class="check">✓</span> Escreve textos, e-mails, relatórios, artigos</li>
+                <li><span class="check">✓</span> Lê e resume documentos (PDF, Word, etc.)</li>
+                <li><span class="check">✓</span> Analisa imagens e planilhas</li>
+                <li><span class="check">✓</span> Ajuda com código e matemática</li>
+                <li><span class="check">✓</span> Traduz, revisa e melhora textos</li>
+              </ul>
+              <div class="highlight-box info">
+                <strong>🎯 Para quem é?</strong>
+                <p>Qualquer pessoa! Estudantes, profissionais, curiosos. Não precisa de conhecimento técnico. Se você sabe digitar, você usa o Claude.</p>
+              </div>
+            </div>
+            <div>
+              <div class="chat-demo">
+                <div class="chat-header">
+                  <span class="chat-dot" style="background:#FF5F56"></span>
+                  <span class="chat-dot" style="background:#FFBD2E"></span>
+                  <span class="chat-dot" style="background:#27C93F"></span>
+                  <span style="margin-left:auto; font-size:0.8rem; color:var(--text-muted)">Claude — claude.ai</span>
+                </div>
+                <div class="chat-body">
+                  <div class="msg user">
+                    <div class="msg-avatar">JK</div>
+                    <div class="msg-bubble">Me explica o que é machine learning de forma simples</div>
+                  </div>
+                  <div class="msg claude">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-bubble">
+                      Imagine que você ensina uma criança a reconhecer gatos mostrando 1000 fotos e dizendo "isso é gato" ou "não é gato". Com o tempo, ela aprende sozinha. Machine learning é exatamente isso — mas com um computador! Ele aprende com exemplos em vez de seguir regras fixas. ✨
+                    </div>
+                  </div>
+                  <div class="msg user">
+                    <div class="msg-avatar">JK</div>
+                    <div class="msg-bubble">Perfeito! Agora escreve um e-mail explicando isso para meu chefe</div>
+                  </div>
+                  <div class="msg claude">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-bubble">
+                      Claro! Aqui está um e-mail profissional:<br /><br />
+                      <em>"Assunto: Sobre Machine Learning na empresa..."</em><br /><br />
+                      <span style="color:var(--text-muted)">[E-mail completo gerado em segundos]</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header fade-in" style="margin-top: 4rem; margin-bottom: 2rem;">
+        <h3 style="font-size:1.4rem; font-weight:700">Exemplos práticos do dia a dia</h3>
+      </div>
+
+      <div class="examples-grid fade-in">
+        <div class="example-card">
+          <span class="example-emoji">📝</span>
+          <h4>Escrever um currículo</h4>
+          <p>"Me ajuda a escrever um currículo para vaga de analista financeiro. Tenho 5 anos de experiência em..."</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">📚</span>
+          <h4>Resumir um livro</h4>
+          <p>"Me faz um resumo dos principais pontos do livro Pai Rico Pai Pobre em 10 tópicos simples"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">💌</span>
+          <h4>E-mail profissional</h4>
+          <p>"Escreve um e-mail pedindo aumento de salário, tom profissional mas sem ser agressivo"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🔍</span>
+          <h4>Analisar um contrato</h4>
+          <p>"Cole o texto do contrato e diga: existe alguma cláusula problemática? Explica em linguagem simples"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🌎</span>
+          <h4>Tradução com contexto</h4>
+          <p>"Traduz esse texto para inglês americano, mantendo o tom informal e jovem do original"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">📊</span>
+          <h4>Analisar dados</h4>
+          <p>"Cole os dados da sua planilha e peça: 'me diz quais meses tiveram mais gastos e por quê'"</p>
+        </div>
+      </div>
+
+      <div class="steps fade-in" style="margin-top:3rem;">
+        <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">🚀 Como começar em 3 passos</h3>
+        <div class="step">
+          <div class="step-num purple">1</div>
+          <div class="step-content">
+            <h4>Acesse claude.ai</h4>
+            <p>Entre no site pelo navegador ou baixe o app no celular. Crie uma conta gratuita com seu e-mail.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num purple">2</div>
+          <div class="step-content">
+            <h4>Digite sua pergunta ou pedido</h4>
+            <p>Escreva como você falaria com uma pessoa. Não precisa de comandos especiais. Quanto mais detalhes, melhor a resposta.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num purple">3</div>
+          <div class="step-content">
+            <h4>Refine e continue a conversa</h4>
+            <p>Se a resposta não foi exatamente o que queria, diga "ajusta para ficar mais curto" ou "agora mais formal". O Claude lembra do contexto.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ COWORK ═══ -->
+  <div class="bg-section green-tint" id="cowork">
+    <section>
+      <div class="section-header fade-in">
+        <span class="section-label" style="color: var(--green-glow)">🖥️ Ferramenta 2 de 3</span>
+        <h2 class="section-title">Cowork — IA no seu Desktop</h2>
+        <p class="section-desc">
+          O Cowork é o Claude com superpoderes instalado no seu computador.
+          Ele cria arquivos, navega na internet e executa tarefas complexas por você.
+        </p>
+      </div>
+
+      <div class="product-grid fade-in">
+        <div>
+          <div class="product-hero-card cowork">
+            <div class="product-tag">🖥️ Cowork Desktop</div>
+            <div class="product-icon-wrapper">🖥️</div>
+            <h3>O que é o Cowork?</h3>
+            <p>
+              É uma versão do Claude que roda como aplicativo no seu computador (Windows/Mac).
+              A diferença? Ele não só responde — ele <strong>age</strong>. Cria arquivos reais,
+              navega em sites, organiza pastas, preenche formulários e muito mais.
+            </p>
+            <ul class="feature-list">
+              <li><span class="check">✓</span> Cria documentos Word, Excel, PowerPoint e PDF</li>
+              <li><span class="check">✓</span> Navega na internet e pesquisa por você</li>
+              <li><span class="check">✓</span> Acessa e organiza arquivos do seu computador</li>
+              <li><span class="check">✓</span> Usa Skills (plugins) para expandir capacidades</li>
+              <li><span class="check">✓</span> Conecta com apps como Slack, Asana, Gmail</li>
+              <li><span class="check">✓</span> Agenda tarefas automáticas recorrentes</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="product-hero-card cowork">
+            <div class="product-tag">⚡ Diferença chave</div>
+            <h3 style="font-size:1.2rem; margin-bottom:1rem;">Claude Chat vs Cowork</h3>
+
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+              <div style="background:rgba(255,255,255,0.04); border-radius:12px; padding:1.2rem;">
+                <p style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.6rem;">💬 Claude Chat diz:</p>
+                <p style="font-size:0.875rem; color:var(--text);">"Aqui está o conteúdo do relatório que você pode copiar e colar no Word..."</p>
+              </div>
+              <div style="text-align:center; color:var(--green-glow); font-size:1.2rem;">↓</div>
+              <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:12px; padding:1.2rem;">
+                <p style="font-size:0.8rem; color:var(--green-glow); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.6rem;">🖥️ Cowork faz:</p>
+                <p style="font-size:0.875rem; color:var(--text);">"✅ Relatório criado! <a style="color:var(--green-glow)">Clique aqui para abrir o arquivo .docx</a>"</p>
+              </div>
+            </div>
+
+            <div class="highlight-box success" style="margin-top:1.5rem;">
+              <strong>🎯 Para quem é?</strong>
+              <p>Profissionais, empreendedores, pessoas que trabalham muito com documentos, planilhas e apresentações. Não precisa saber programar.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header fade-in" style="margin-top: 4rem; margin-bottom: 2rem;">
+        <h3 style="font-size:1.4rem; font-weight:700">O que o Cowork consegue fazer</h3>
+      </div>
+
+      <div class="examples-grid fade-in">
+        <div class="example-card">
+          <span class="example-emoji">📊</span>
+          <h4>Criar planilha completa</h4>
+          <p>"Cria uma planilha de controle financeiro pessoal com gráficos, fórmulas e formatação profissional"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">📑</span>
+          <h4>Gerar relatório em Word</h4>
+          <p>"Pesquisa sobre o mercado de energia solar no Brasil e cria um relatório de 5 páginas em .docx"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🎨</span>
+          <h4>Montar apresentação</h4>
+          <p>"Cria uma apresentação de 10 slides sobre nosso novo produto para a reunião de vendas amanhã"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🔍</span>
+          <h4>Pesquisar na internet</h4>
+          <p>"Pesquisa os 5 melhores softwares de gestão de projetos em 2025 e compara os preços"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">📂</span>
+          <h4>Organizar arquivos</h4>
+          <p>"Olha a pasta Downloads e organiza os arquivos por tipo em subpastas separadas"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">⏰</span>
+          <h4>Tarefa automática diária</h4>
+          <p>"Todo dia às 8h, resume as notícias de tecnologia e me manda um briefing por e-mail"</p>
+        </div>
+      </div>
+
+      <div class="highlight-box warning fade-in" style="max-width:700px; margin:3rem auto 0;">
+        <strong>💡 Dica de ouro</strong>
+        <p>O Cowork tem "Skills" (habilidades extra) que você pode instalar — como plugins que ampliam o que ele pode fazer. Por exemplo, uma Skill para criar PDFs profissionais, outra para criar slides no PowerPoint, e assim por diante.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ CLAUDE CODE ═══ -->
+  <div class="bg-section orange-tint" id="claudecode">
+    <section>
+      <div class="section-header fade-in">
+        <span class="section-label" style="color: var(--orange-glow)">⌨️ Ferramenta 3 de 3</span>
+        <h2 class="section-title">Claude Code — IA no Terminal</h2>
+        <p class="section-desc">
+          Para programadores e desenvolvedores que querem delegar tarefas de código
+          para a IA diretamente no terminal, sem sair do fluxo de trabalho.
+        </p>
+      </div>
+
+      <div class="product-grid fade-in">
+        <div>
+          <div class="product-hero-card code">
+            <div class="product-tag">⌨️ Claude Code</div>
+            <div class="product-icon-wrapper">⌨️</div>
+            <h3>O que é o Claude Code?</h3>
+            <p>
+              O Claude Code é uma ferramenta de linha de comando (CLI) que traz a IA do Claude
+              para dentro do terminal do desenvolvedor. Em vez de copiar código do chat,
+              o Claude Code <strong>lê, escreve e executa código no seu projeto diretamente</strong>.
+            </p>
+            <ul class="feature-list">
+              <li><span class="check">✓</span> Lê e entende todo o seu projeto de código</li>
+              <li><span class="check">✓</span> Escreve funções e componentes completos</li>
+              <li><span class="check">✓</span> Corrige bugs automaticamente</li>
+              <li><span class="check">✓</span> Roda testes e valida o código</li>
+              <li><span class="check">✓</span> Faz commits no Git por você</li>
+              <li><span class="check">✓</span> Refatora código legado</li>
+            </ul>
+            <div class="highlight-box warning">
+              <strong>🎯 Para quem é?</strong>
+              <p>Desenvolvedores e programadores que usam terminal. Requer conhecimento técnico básico em programação e linha de comando.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+              <span class="terminal-title">Terminal — Claude Code</span>
+            </div>
+            <div class="terminal-body">
+              <div>
+                <span class="t-prompt">~/meu-projeto $</span>
+                <span class="t-cmd"> claude</span>
+              </div>
+              <div style="color:#6E7681">✓ Claude Code iniciado</div>
+              <br />
+              <div>
+                <span class="t-prompt">Você:</span>
+                <span class="t-cmd"> Tem um bug na função de login, o token não está sendo salvo</span>
+              </div>
+              <br />
+              <div class="t-ai">Claude: Analisando o projeto...</div>
+              <div class="t-ai">→ Lendo src/auth/login.ts</div>
+              <div class="t-ai">→ Lendo src/utils/token.ts</div>
+              <br />
+              <div class="t-output">Encontrei o problema! Na linha 47 de login.ts,</div>
+              <div class="t-output">o await está faltando no saveToken().</div>
+              <div class="t-output">Corrigindo agora...</div>
+              <br />
+              <div class="t-success">✓ src/auth/login.ts atualizado</div>
+              <div class="t-success">✓ Testes rodando... 12/12 passaram</div>
+              <div class="t-success">✓ Commit criado: "fix: add await to saveToken"</div>
+              <br />
+              <div>
+                <span class="t-prompt">Você:</span>
+                <span class="t-cmd"> Agora cria os testes unitários para essa função</span>
+              </div>
+              <div class="t-ai">Gerando testes... ✨</div>
+            </div>
+          </div>
+
+          <div class="highlight-box info" style="margin-top:1rem;">
+            <strong>⚡ Produtividade real</strong>
+            <p>Desenvolvedores relatam economizar 2 a 4 horas por dia usando Claude Code para tarefas repetitivas de código.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header fade-in" style="margin-top: 4rem; margin-bottom: 2rem;">
+        <h3 style="font-size:1.4rem; font-weight:700">O que o Claude Code faz na prática</h3>
+      </div>
+
+      <div class="examples-grid fade-in">
+        <div class="example-card">
+          <span class="example-emoji">🐛</span>
+          <h4>Caça bugs automaticamente</h4>
+          <p>"Meu app está travando na tela de pagamento" → Claude lê o código, acha o erro e corrige sozinho</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🏗️</span>
+          <h4>Constrói features inteiras</h4>
+          <p>"Cria um sistema de autenticação com JWT, login, registro e recuperação de senha"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🧪</span>
+          <h4>Escreve testes automatizados</h4>
+          <p>"Gera testes unitários e de integração para todas as funções da pasta /api"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🔄</span>
+          <h4>Refatora código antigo</h4>
+          <p>"Esse código tem 3 anos, refatora para usar os padrões modernos do React 2025"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">📖</span>
+          <h4>Documenta automaticamente</h4>
+          <p>"Adiciona comentários e documentação JSDoc em todas as funções do projeto"</p>
+        </div>
+        <div class="example-card">
+          <span class="example-emoji">🚀</span>
+          <h4>Configura deploy</h4>
+          <p>"Cria os arquivos Docker e o pipeline de CI/CD no GitHub Actions para esse projeto"</p>
+        </div>
+      </div>
+
+      <div class="steps fade-in" style="margin-top:3rem;">
+        <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">⌨️ Como instalar o Claude Code</h3>
+        <div class="step">
+          <div class="step-num orange">1</div>
+          <div class="step-content">
+            <h4>Tenha Node.js instalado</h4>
+            <p>O Claude Code requer Node.js 18+ no seu sistema. Verifique com <code style="background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:4px; font-size:0.8rem;">node --version</code> no terminal.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num orange">2</div>
+          <div class="step-content">
+            <h4>Instale via npm</h4>
+            <p>No terminal, rode: <code style="background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:4px; font-size:0.8rem;">npm install -g @anthropic-ai/claude-code</code></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num orange">3</div>
+          <div class="step-content">
+            <h4>Entre na pasta do projeto e rode</h4>
+            <p>Navegue até seu projeto e digite <code style="background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:4px; font-size:0.8rem;">claude</code>. Faça login com sua conta Anthropic e pronto!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ COMPARATIVO ═══ -->
+  <section id="comparar">
+    <div class="section-header fade-in">
+      <span class="section-label" style="color: var(--text-muted)">📊 Guia de escolha</span>
+      <h2 class="section-title">Qual usar em cada situação?</h2>
+      <p class="section-desc">
+        Compare as ferramentas e descubra qual é a certa para o que você precisa fazer.
+      </p>
+    </div>
+
+    <div class="fade-in" style="overflow-x:auto;">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th class="h-feat">O que você quer fazer</th>
+            <th class="h-claude">💬 Claude Chat</th>
+            <th class="h-cowork">🖥️ Cowork</th>
+            <th class="h-code">⌨️ Claude Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fazer perguntas e obter respostas</td>
+            <td class="col-claude"><span class="yes">✅</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Escrever textos, e-mails, artigos</td>
+            <td class="col-claude"><span class="yes">✅</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="partial">parcial</span></td>
+          </tr>
+          <tr>
+            <td>Criar arquivo Word/Excel/PowerPoint</td>
+            <td class="col-claude"><span class="no">✗</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Navegar na internet por você</td>
+            <td class="col-claude"><span class="partial">limitado</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Acessar arquivos do computador</td>
+            <td class="col-claude"><span class="no">✗</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Escrever e corrigir código</td>
+            <td class="col-claude"><span class="partial">texto</span></td>
+            <td class="col-cowork"><span class="partial">básico</span></td>
+            <td class="col-code"><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Rodar código e testes</td>
+            <td class="col-claude"><span class="no">✗</span></td>
+            <td class="col-cowork"><span class="no">✗</span></td>
+            <td class="col-code"><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Automatizar tarefas agendadas</td>
+            <td class="col-claude"><span class="no">✗</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="partial">scripts</span></td>
+          </tr>
+          <tr>
+            <td>Conectar com Slack, Gmail, etc.</td>
+            <td class="col-claude"><span class="no">✗</span></td>
+            <td class="col-cowork"><span class="yes">✅</span></td>
+            <td class="col-code"><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Sem instalação — só navegador</td>
+            <td class="col-claude"><span class="yes">✅</span></td>
+            <td class="col-cowork"><span class="no">✗</span></td>
+            <td class="col-code"><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Precisa saber programar</td>
+            <td class="col-claude"><span class="no">Não</span></td>
+            <td class="col-cowork"><span class="no">Não</span></td>
+            <td class="col-code"><span class="yes">Sim</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="audience-grid fade-in" style="margin-top:4rem;">
+      <div class="audience-card">
+        <span class="audience-emoji">👩‍🎓</span>
+        <h4>Estudante ou Curioso</h4>
+        <p>Use o <strong style="color:var(--primary-glow)">Claude Chat</strong>. Acesso gratuito, sem instalação. Perfeito para aprender, pesquisar e tirar dúvidas.</p>
+      </div>
+      <div class="audience-card">
+        <span class="audience-emoji">👔</span>
+        <h4>Profissional ou Empreendedor</h4>
+        <p>Use o <strong style="color:var(--green-glow)">Cowork</strong>. Cria documentos reais, pesquisa, organiza — tudo sem saber programar.</p>
+      </div>
+      <div class="audience-card">
+        <span class="audience-emoji">👨‍💻</span>
+        <h4>Desenvolvedor</h4>
+        <p>Use o <strong style="color:var(--orange-glow)">Claude Code</strong>. Automatize código, corrija bugs e construa features em velocidade máxima.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ VIDEO SECTION ═══ -->
+  <div class="video-section" id="video">
+    <div style="max-width:900px; margin:0 auto;">
+      <div class="section-header fade-in">
+        <span class="section-label" style="color: var(--primary-glow)">🎬 Em Breve</span>
+        <h2 class="section-title">Vídeo explicativo completo</h2>
+        <p class="section-desc">
+          Em breve você poderá assistir uma aula completa sobre o ecossistema Claude,
+          mostrando tudo na prática, ao vivo, passo a passo.
+        </p>
+      </div>
+
+      <div class="video-wrap fade-in">
+        <div class="video-container" id="video-placeholder">
+          <div class="video-placeholder-icon">▶</div>
+          <div class="video-placeholder-text">
+            <h3>Aula em Vídeo — Em Gravação</h3>
+            <p>O vídeo estará disponível em breve neste espaço</p>
+          </div>
+          <span class="video-soon-badge">📹 Em breve</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:1.5rem;">
+          <div style="text-align:center; padding:1.2rem; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">📖</div>
+            <div style="font-size:0.8rem; font-weight:700; margin-bottom:0.3rem;">O que você vai aprender</div>
+            <div style="font-size:0.78rem; color:var(--text-muted)">O ecossistema completo explicado na prática</div>
+          </div>
+          <div style="text-align:center; padding:1.2rem; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">⏱️</div>
+            <div style="font-size:0.8rem; font-weight:700; margin-bottom:0.3rem;">Ao vivo, sem cortes</div>
+            <div style="font-size:0.78rem; color:var(--text-muted)">Demonstração real de cada ferramenta em uso</div>
+          </div>
+          <div style="text-align:center; padding:1.2rem; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);">
+            <div style="font-size:1.6rem; margin-bottom:0.5rem;">🎯</div>
+            <div style="font-size:0.8rem; font-weight:700; margin-bottom:0.3rem;">Para iniciantes</div>
+            <div style="font-size:0.78rem; color:var(--text-muted)">Linguagem simples, sem termos técnicos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <span class="footer-logo">🤖 Guia Completo 2026 — Ecossistema Claude</span>
+    <p style="margin-bottom:0.5rem;">
+      Feito para quem quer aprender IA de forma simples e direta.
+    </p>
+    <p>
+      Criado com <span style="color:var(--pink)">♥</span> usando
+      <a href="https://claude.ai" target="_blank">Claude</a> +
+      <a href="#" style="color:var(--green-glow)">Cowork</a> ·
+      Anthropic &copy; 2026
+    </p>
+  </footer>
+
+  <!-- ═══ SCROLL ANIMATIONS ═══ -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Smooth active nav links
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const top = section.getBoundingClientRect().top;
+        if (top <= 100) current = section.id;
+      });
+
+      navLinks.forEach(link => {
+        link.style.color = '';
+        if (link.getAttribute('href') === '#' + current) {
+          link.style.color = 'var(--text)';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
